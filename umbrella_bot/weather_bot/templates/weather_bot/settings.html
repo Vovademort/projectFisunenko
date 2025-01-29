@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Настройки</title>
+</head>
+<body>
+  <h2>Настройки уведомлений</h2>
+  <form method="post">
+      {% csrf_token %}
+      <label for="id_city">Город:</label>
+      {{ form.city }}
+  
+      <label for="id_notification_time">Время уведомлений:</label>
+      {{ form.notification_time }}
+  
+      <button type="submit">Сохранить</button>
+      <label for="id_chat_id">Ваш Telegram ID:</label>
+      {{ form.chat_id }}
+  </form>
+</body>
+</html>
