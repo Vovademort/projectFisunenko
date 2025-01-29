@@ -10,7 +10,7 @@ API_KEY = '6e4d583db3bb77a452c8abf9479cd4de'  # OpenWeatherMap
 TELEGRAM_API_KEY = '8107057098:AAF5-GLXDJExpYinKDyHy4Ey9FIMob8y8gE'  # Telegram
 
 def get_weather(city):
-    """Получает данные о погоде для заданного города"""
+    """Получаем данные о погоде для заданного города"""
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric&lang=ru'
     try:
         response = requests.get(url, timeout=10)
@@ -30,7 +30,7 @@ async def send_weather_to_telegram(chat_id, weather_message):
 
 def weather_view(request):
     """Возвращает погоду в JSON"""
-    city = request.GET.get("city", "Moscow")  # Можно передавать город в параметрах запроса
+    city = request.GET.get("city", "Moscow") 
     weather = get_weather(city)
     return JsonResponse({'status': 'success', 'message': weather})
 
@@ -57,7 +57,7 @@ def send_weather_view(request):
 
 def settings_view(request):
     """Обработчик страницы настроек"""
-    chat_id = "1448031662"  # Временный chat_id (заменим на авторизацию)
+    chat_id = "1448031662"  # Временный chat_id 
     
     user_settings, created = UserSettings.objects.get_or_create(chat_id=chat_id)
 
