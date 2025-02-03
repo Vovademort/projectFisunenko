@@ -3,9 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Настройки</title>
+    <script src="https://telegram.org/js/telegram-widget.js?7" 
+            data-telegram-login="@project_Fisunenko_bot" 
+            data-size="large"
+            data-auth-url="{% url 'telegram_auth' %}"
+            data-request-access="write">
+    </script>
 </head>
 <body>
   <h2>Настройки уведомлений</h2>
+  
+  <!-- Кнопка Telegram Login -->
+  <p>Авторизуйтесь через Telegram:</p>
+  <script src="https://telegram.org/js/telegram-widget.js?7"
+          data-telegram-login="@project_Fisunenko_bot"
+          data-size="large"
+          data-auth-url="{% url 'telegram_auth' %}"
+          data-request-access="write">
+  </script>
+
   <form method="post">
       {% csrf_token %}
       <label for="id_city">Город:</label>
@@ -13,10 +29,11 @@
   
       <label for="id_notification_time">Время уведомлений:</label>
       {{ form.notification_time }}
-  
-      <button type="submit">Сохранить</button>
+
       <label for="id_chat_id">Ваш Telegram ID:</label>
-      {{ form.chat_id }}
+      <input type="text" name="chat_id" id="id_chat_id" value="{{ form.chat_id.value|default_if_none:'' }}">
+
+      <button type="submit">Сохранить</button>
   </form>
 </body>
 </html>
