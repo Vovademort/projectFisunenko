@@ -1,5 +1,4 @@
-import os
-from dotenv import load_dotenv
+
 import requests
 from django.http import JsonResponse
 from telegram import Bot
@@ -7,11 +6,10 @@ import asyncio
 from django.shortcuts import render, redirect
 from .models import UserSettings
 from .forms import UserSettingsForm
+from django.conf import settings
 
-load_dotenv()
-
-API_KEY = os.getenv('API_KEY')   # OpenWeatherMap
-TELEGRAM_API_KEY = os.getenv('TELEGRAM_API_KEY') # Telegram
+API_KEY = settings.API_KEY   # OpenWeatherMap
+TELEGRAM_API_KEY = settings.TELEGRAM_API_KEY
 
 def get_weather(city):
     # Получаем данные о погоде для заданного города
