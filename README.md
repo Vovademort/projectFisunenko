@@ -17,7 +17,7 @@
 ## Установка и запуск
 ### 1. Клонирование репозитория
 ```sh
-git clone https://github.com/your-repo-url/umbrella-bot.git
+git clone https://github.com/(https://github.com/Vovademort/projectFisunenko)/umbrella-bot.git
 cd umbrella-bot
 ```
 
