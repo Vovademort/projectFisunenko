@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 import requests
 from django.http import JsonResponse
 from telegram import Bot
@@ -6,8 +8,10 @@ from django.shortcuts import render, redirect
 from .models import UserSettings
 from .forms import UserSettingsForm
 
-API_KEY = '6e4d583db3bb77a452c8abf9479cd4de'  # OpenWeatherMap
-TELEGRAM_API_KEY = '8107057098:AAF5-GLXDJExpYinKDyHy4Ey9FIMob8y8gE'  # Telegram
+load_dotenv()
+
+API_KEY = os.getenv('API_KEY')   # OpenWeatherMap
+TELEGRAM_API_KEY = os.getenv('TELEGRAM_API_KEY') # Telegram
 
 def get_weather(city):
     # Получаем данные о погоде для заданного города
@@ -23,6 +27,7 @@ def get_weather(city):
     except requests.exceptions.RequestException as e:
         return f'Ошибка при подключении к API: {e}'
 
+
 async def send_weather_to_telegram(chat_id, weather_message):
     # Отправляет сообщение с погодой в Telegram
     bot = Bot(token=TELEGRAM_API_KEY)
@@ -37,10 +42,11 @@ def weather_view(request):
 def send_weather_view(request):
     # Отправляет погоду всем пользователям, у которых есть настройки
     try:
-        users = UserSettings.objects.all()
+        users = UserSettings.objects.all()  # Получаем всех пользователей из базы
+
         if not users:
             return JsonResponse({'status': 'error', 'message': 'Нет пользователей с настройками'}, status=400)
-        
+
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
@@ -56,18 +62,18 @@ def send_weather_view(request):
 
 def telegram_auth(request):
     # Функция для получения chat_id и сохранения его в сессию и базу данных
-    chat_id = request.GET.get('id')
+    chat_id = request.GET.get('chat_id')
     if chat_id:
-        request.session['chat_id'] = chat_id
+        request.session['chat_id'] = chat_id  # Сохраняем chat_id в сессии
         user_settings, created = UserSettings.objects.get_or_create(chat_id=chat_id)
-        return redirect('settings')  # Перенаправляем на страницу настроек после успешного логина
+        return JsonResponse({'status': 'success', 'message': 'Chat ID сохранен'})
     return JsonResponse({'status': 'error', 'message': 'Chat ID не получен'}, status=400)
 
 def settings_view(request):
     # Обработчик страницы настроек
     chat_id = request.session.get('chat_id')
     if not chat_id:
-        return redirect('home')  # Перенаправляем, если chat_id отсутствует
+        return redirect('weather')  # Перенаправляем, если chat_id отсутствует
     
     user_settings, created = UserSettings.objects.get_or_create(chat_id=chat_id)
 
@@ -75,10 +81,8 @@ def settings_view(request):
         form = UserSettingsForm(request.POST, instance=user_settings)
         if form.is_valid():
             form.save()
-            return redirect('settings')
+            return redirect('settings')  # Перезагрузка страницы после сохранения
     else:
         form = UserSettingsForm(instance=user_settings)
 
-    return render(request, 'weather_bot/settings.html', {'form': form, 'chat_id': chat_id})
-
-
+    return render(request, 'weather_bot/settings.html', {'form': form})

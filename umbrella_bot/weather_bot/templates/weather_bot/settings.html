@@ -31,7 +31,7 @@
       {{ form.notification_time }}
 
       <label for="id_chat_id">Ваш Telegram ID:</label>
-      <input type="text" name="chat_id" id="id_chat_id" value="{{ form.chat_id.value|default_if_none:'' }}">
+      {{ form.chat_id }}
 
       <button type="submit">Сохранить</button>
   </form>
